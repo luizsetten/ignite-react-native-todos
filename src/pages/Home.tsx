@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Alert, StyleSheet, View } from 'react-native';
 
 import { Header } from '../components/Header';
 import { Task, TasksList } from '../components/TasksList';
@@ -32,7 +32,21 @@ export function Home() {
   }
 
   function handleRemoveTask(id: number) {
-    setTasks(oldState => oldState.filter(item => item.id !== id))
+    Alert.alert("Confirmar exclusão", "Tem certeza que deseja excluir o item selecionado?", [{
+      text: 'Confirmar',
+      onPress: () => setTasks(oldState => oldState.filter(item => item.id !== id))
+    },
+    {
+      text: "Cancelar"
+    }]);
+  }
+
+  function editTask(task: Task) {
+    setTasks(oldState => oldState.map(item => {
+      if(item.id === task.id) 
+        return task
+      return item
+    }))
   }
 
   return (
@@ -45,6 +59,7 @@ export function Home() {
         tasks={tasks} 
         toggleTaskDone={handleToggleTaskDone}
         removeTask={handleRemoveTask} 
+        editTask={editTask}
       />
     </View>
   )
